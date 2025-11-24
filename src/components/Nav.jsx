@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { House, SquareUserRound, Store, Contact } from "lucide-react";
+import { House, SquareUserRound, Store, Contact, ShoppingCart, Heart } from "lucide-react";
 
 const Nav = () => {
   return (
@@ -12,6 +12,9 @@ const Nav = () => {
           <NavItem href="/about" icon={<SquareUserRound className="w-5 h-5" />} label="About" />
           <NavItem href="/store" icon={<Store className="w-5 h-5" />} label="Store" />
           <NavItem href="/contact" icon={<Contact className="w-5 h-5" />} label="Contact" />
+          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600" />
+          <NavItem href="/wishlist" icon={<Heart className="w-5 h-5" />} label="Wishlist" />
+          <NavItem href="/cart" icon={<ShoppingCart className="w-5 h-5" />} label="Cart" />
         </nav>
       </div>
     </div>

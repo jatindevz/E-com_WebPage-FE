@@ -1,38 +1,63 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/section/Button";
+import { useUser } from "@/hooks/useUser";
+import { supabase } from "@/lib/supabaseClient";
 
-function ProductCard({ name, image, price, category, isNew, onAddToCart }) {
+function ProductCard({
+    name,
+    image,
+    price,
+    category,
+    isNew,
+    onAddToCart,
+    onAddToWishlist,
+    isInWishlist,
+}) {
     return (
-        <div className="group cursor-pointer bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
+        <div className="group cursor-pointer bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 ">
             <div className="relative overflow-hidden rounded-lg">
                 <img
                     src={image}
                     alt={name}
                     className="w-full h-[230px] object-cover group-hover:scale-105 transition-all duration-300"
                 />
+
                 {isNew && (
                     <span className="absolute top-3 left-3 bg-coral-red text-white px-2 py-1 rounded-full text-xs font-bold">
                         New
                     </span>
                 )}
+
+                {/* Hover button container */}
                 <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {/* Nested group */}
                     <button
-                        onClick={onAddToCart}
-                        className="bg-white dark:bg-gray-800 p-2 rounded-full shadow-md hover:bg-coral-red hover:text-white transition-colors duration-200"
+                        onClick={onAddToWishlist}
+                        disabled={isInWishlist}
+                        className={`group/item bg-white dark:bg-gray-800 p-2 rounded-full shadow-md transition-colors duration-200 relative ${isInWishlist
+                                ? "cursor-not-allowed opacity-70"
+                                : "hover:bg-coral-red hover:text-white"
+                            }`}
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
+
+                        {/* Tooltip */}
+                        <span className="absolute top-1/2 -translate-y-1/2 right-0 whitespace-nowrap font-medium bg-gray-800 text-white py-1 px-2 rounded text-xs dark:text-gray-400 opacity-0 group-hover/item:opacity-100 group-hover/item:right-12 transition-all duration-200 z-20 ">
+                            {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
+                        </span>
                     </button>
                 </div>
             </div>
 
             <div className="mt-4">
-                <span className="text-xs text-slate-gray dark:text-gray-400 uppercase tracking-wide">{category}</span>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-1">
-                    {name}
-                </h3>
+                <span className="text-xs text-slate-gray dark:text-gray-400 uppercase tracking-wide">
+                    {category}
+                </span>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-1">{name}</h3>
+
                 <div className="flex items-center justify-between mt-2">
                     <p className="text-coral-red font-semibold text-xl">${price}</p>
                     <button
@@ -48,176 +73,91 @@ function ProductCard({ name, image, price, category, isNew, onAddToCart }) {
 }
 
 export default function Store() {
-    const [products] = useState([
-        {
-            id: 1,
-            name: "Nike Air Force 1 '07",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=1",
-            price: 110,
-            category: "Lifestyle",
-            isNew: true
-        },
-        {
-            id: 2,
-            name: "Nike Dunk Low Retro",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=2",
-            price: 120,
-            category: "Lifestyle",
-            isNew: false
-        },
-        {
-            id: 3,
-            name: "Nike Air Max 270",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=3",
-            price: 150,
-            category: "Running",
-            isNew: true
-        },
-        {
-            id: 4,
-            name: "Nike Pegasus 40",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=4",
-            price: 140,
-            category: "Running",
-            isNew: false
-        },
-        {
-            id: 5,
-            name: "Air Jordan 1 Mid",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=5",
-            price: 165,
-            category: "Basketball",
-            isNew: false
-        },
-        {
-            id: 6,
-            name: "Nike Air VaporMax Plus",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=6",
-            price: 210,
-            category: "Lifestyle",
-            isNew: true
-        },
-        {
-            id: 7,
-            name: "Nike Metcon 9",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=7",
-            price: 130,
-            category: "Training",
-            isNew: false
-        },
-        {
-            id: 8,
-            name: "Nike Blazer Mid '77 Vintage",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=8",
-            price: 105,
-            category: "Lifestyle",
-            isNew: false
-        },
-        {
-            id: 9,
-            name: "Nike Vaporfly Next% 3",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=9",
-            price: 260,
-            category: "Running",
-            isNew: true
-        },
-        {
-            id: 10,
-            name: "Nike Air Max 97 SE",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=10",
-            price: 180,
-            category: "Lifestyle",
-            isNew: false
-        },
-        {
-            id: 11,
-            name: "Nike Court Legacy Lift",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=11",
-            price: 85,
-            category: "Tennis",
-            isNew: true
-        },
-        {
-            id: 12,
-            name: "Nike Zoom Freak 5",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=12",
-            price: 130,
-            category: "Basketball",
-            isNew: false
-        },
-        {
-            id: 13,
-            name: "Nike React Infinity 4",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=13",
-            price: 160,
-            category: "Running",
-            isNew: true
-        },
-        {
-            id: 14,
-            name: "Nike Air Max 90",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=14",
-            price: 130,
-            category: "Lifestyle",
-            isNew: false
-        },
-        {
-            id: 15,
-            name: "Nike SB Dunk High",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=15",
-            price: 115,
-            category: "Skateboarding",
-            isNew: false
-        },
-        {
-            id: 16,
-            name: "Nike Air Zoom Pegasus 39 Shield",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=16",
-            price: 145,
-            category: "Running",
-            isNew: true
-        },
-        {
-            id: 17,
-            name: "Nike LeBron 21",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=17",
-            price: 200,
-            category: "Basketball",
-            isNew: true
-        },
-        {
-            id: 18,
-            name: "Nike Air Max 1 '86",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=18",
-            price: 150,
-            category: "Lifestyle",
-            isNew: false
-        },
-        {
-            id: 19,
-            name: "Nike ZoomX Streakfly",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=19",
-            price: 160,
-            category: "Racing",
-            isNew: false
-        },
-        {
-            id: 20,
-            name: "Nike Air More Uptempo '96",
-            image: "https://loremflickr.com/600/600/nike,shoes?lock=20",
-            price: 175,
-            category: "Basketball",
-            isNew: true
-        }
-    ]);
+    const [products, setProducts] = useState([]);
+    const [loadingProducts, setLoadingProducts] = useState(true);
 
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [sortBy, setSortBy] = useState("default");
 
+    const [cart, setCart] = useState([]);
+    const [wishlistIds, setWishlistIds] = useState([]); // only product IDs from Supabase
+
+    const user = useUser();
+
+    // Load cart from localStorage (cart still local for now)
+    useEffect(() => {
+        async function loadCart() {
+            const { data, error } = await supabase
+                .from("cart")
+                .select(`
+                id,
+                quantity,
+                product:products(*)
+            `)
+                .eq("user_id", user.id);
+
+            if (error) console.error(error);
+            else setCart(data);
+        }
+
+        if (user) loadCart();
+    }, [user]);
+
+
+    // useEffect(() => {
+    //     localStorage.setItem("cart", JSON.stringify(cart));
+    // }, [cart]);
+
+    // Fetch products from Supabase
+    useEffect(() => {
+        async function fetchProducts() {
+            setLoadingProducts(true);
+
+            const { data, error } = await supabase
+                .from("products")
+                .select("*")
+                .order("id", { ascending: true });
+
+            if (error) {
+                console.error("Error fetching products:", error);
+            } else {
+                setProducts(data || []);
+            }
+
+            setLoadingProducts(false);
+        }
+
+        fetchProducts();
+    }, []);
+
+    // Fetch wishlist product IDs for current user from Supabase
+    useEffect(() => {
+        if (!user) {
+            setWishlistIds([]);
+            return;
+        }
+
+        async function fetchWishlist() {
+            const { data, error } = await supabase
+                .from("wishlist")
+                .select("product_id")
+                .eq("user_id", user.id);
+
+            if (error) {
+                console.log("Error fetching wishlist:", error);
+                return;
+            }
+
+            setWishlistIds((data || []).map((row) => row.product_id));
+        }
+
+        fetchWishlist();
+    }, [user]);
+
     const categories = ["All", "Lifestyle", "Running", "Basketball", "Training", "Tennis", "Skateboarding", "Racing"];
 
-    const filteredProducts = products.filter(product =>
-        selectedCategory === "All" || product.category === selectedCategory
+    const filteredProducts = products.filter(
+        (product) => selectedCategory === "All" || product.category === selectedCategory
     );
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -233,16 +173,68 @@ export default function Store() {
         }
     });
 
-    const handleAddToCart = (product) => {
-        // Add to cart functionality would go here
-        console.log("Added to cart:", product);
-        // You can integrate with your cart context or state management
+    // --- Wishlist now in Supabase ---
+    const handleAddToWishlist = async (product) => {
+        if (!user) {
+            alert("Please log in to add items to your wishlist.");
+            return;
+        }
+
+        if (wishlistIds.includes(product.id)) {
+            console.log("Already in wishlist:", product.name);
+            return;
+        }
+
+        const { error } = await supabase.from("wishlist").insert({
+            user_id: user.id,
+            product_id: product.id,
+        });
+
+        if (error) {
+            console.log("Error adding to wishlist:", error);
+            return;
+        }
+
+        console.log("Added to wishlist:", product.name);
+        setWishlistIds((prev) => [...prev, product.id]);
     };
+
+    // Cart still local
+    const handleAddToCart = async (product) => {
+        if (!user) {
+            alert("Please log in to add items to cart.");
+            return;
+        }
+
+        const { error } = await supabase
+            .from("cart")
+            .upsert(
+                {
+                    user_id: user.id,
+                    product_id: product.id,
+                    quantity: 1
+                },
+                { onConflict: "user_id,product_id" }
+            )
+            .select();
+
+        if (error) {
+            console.error("Error adding to cart:", error);
+            return;
+        }
+
+        console.log("Cart updated:", product.name);
+    };
+
 
     return (
         <section className="max-container mt-14 py-20 px-4 transition-colors duration-300">
             {/* Header */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-12 ">
+                <div className="text-white text-sm">
+                    {user && <div>{user.email}</div>}
+                </div>
+
                 <h1 className="text-4xl font-palanquin font-bold text-gray-900 dark:text-white">
                     Explore Our <span className="text-coral-red">Nike Store</span>
                 </h1>
@@ -255,7 +247,7 @@ export default function Store() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 {/* Category Filter */}
                 <div className="flex flex-wrap gap-2">
-                    {categories.map(category => (
+                    {categories.map((category) => (
                         <button
                             key={category}
                             onClick={() => setSelectedCategory(category)}
@@ -288,28 +280,31 @@ export default function Store() {
             {/* Results Count */}
             <div className="mb-6">
                 <p className="text-slate-gray dark:text-gray-400">
-                    Showing {sortedProducts.length} of {products.length} products
-                    {selectedCategory !== "All" && ` in ${selectedCategory}`}
+                    {loadingProducts
+                        ? "Loading products..."
+                        : `Showing ${sortedProducts.length} of ${products.length} products${selectedCategory !== "All" ? ` in ${selectedCategory}` : ""
+                        }`}
                 </p>
             </div>
 
             {/* Products Grid */}
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
-                {sortedProducts.map((item) => (
-                    <ProductCard
-                        key={item.id}
-                        {...item}
-                        onAddToCart={() => handleAddToCart(item)}
-                    />
-                ))}
-            </div>
+            {!loadingProducts && (
+                <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
+                    {sortedProducts.map((item) => (
+                        <ProductCard
+                            key={item.id}
+                            {...item}
+                            isInWishlist={wishlistIds.includes(item.id)}
+                            onAddToWishlist={() => handleAddToWishlist(item)}
+                            onAddToCart={() => handleAddToCart(item)}
+                        />
+                    ))}
+                </div>
+            )}
 
             {/* Load More Button */}
             <div className="text-center mt-12">
-                <Button
-                    label="Load More Products"
-                    onClick={() => console.log("Load more functionality")}
-                />
+                <Button label="Load More Products" onClick={() => console.log("Load more functionality")} />
             </div>
         </section>
     );
