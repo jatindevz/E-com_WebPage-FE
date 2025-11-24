@@ -18,6 +18,7 @@ const ContactInfoCard = ({ icon, title, details, description }) => {
 const StoreLocationCard = ({ name, address, hours, phone, image }) => {
 
     const openMap = () => {
+        console.log("worked");
         const encodedAddress = encodeURIComponent(address);
         window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`, '_blank');
     };
@@ -48,11 +49,13 @@ const StoreLocationCard = ({ name, address, hours, phone, image }) => {
                     </div>
                 </div>
 
-                <Button
-                    label="Get Directions"
-                    className="mt-4 w-full z-10"
-                    onClick={() => openMap()}
-                />
+                {/* Regular button use karein */}
+                <button
+                    onClick={openMap}
+                    className="mt-4 w-full bg-coral-red text-white py-3 px-6 rounded-full hover:bg-coral-red/90 transition-colors duration-200 font-medium"
+                >
+                    Get Directions
+                </button>
             </div>
         </div>
     );
