@@ -2,7 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Toggel from "@/components/section/toggle";
 import { Nav } from "@/components/index"
-import { useUser } from "@/hooks/useUser";
+import Chatbot from "@/components/Ai/chatbot"
+
 
 
 
@@ -32,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900`}
       >
         <Nav />
+        <Chatbot />
         <Toggel />
         {children}
       </body>

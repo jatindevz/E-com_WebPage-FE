@@ -16,6 +16,7 @@ function ProductCard({
 }) {
     return (
         <div className="group cursor-pointer bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 ">
+            
             <div className="relative overflow-hidden rounded-lg">
                 <img
                     src={image}
@@ -45,7 +46,7 @@ function ProductCard({
                         </svg>
 
                         {/* Tooltip */}
-                        <span className="absolute top-1/2 -translate-y-1/2 right-0 whitespace-nowrap font-medium bg-gray-800 text-white py-1 px-2 rounded text-xs dark:text-gray-400 opacity-0 group-hover/item:opacity-100 group-hover/item:right-12 transition-all duration-200 z-20 ">
+                        <span className="absolute top-1/2 -translate-y-1/2 right-0 whitespace-nowrap font-medium bg-gray-800 text-white py-1 px-2 rounded text-xs dark:text-gray-400 opacity-0 group-hover/item:opacity-100 group-hover/item:right-12 transition-all duration-200 ">
                             {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
                         </span>
                     </button>
@@ -104,9 +105,7 @@ export default function Store() {
     }, [user]);
 
 
-    // useEffect(() => {
-    //     localStorage.setItem("cart", JSON.stringify(cart));
-    // }, [cart]);
+
 
     // Fetch products from Supabase
     useEffect(() => {
@@ -229,7 +228,10 @@ export default function Store() {
 
     return (
         <section className="max-container mt-14 py-20 px-4 transition-colors duration-300">
+            
             {/* Header */}
+            
+            
             <div className="text-center mb-12 ">
                 <div className="text-white text-sm">
                     {user && <div>{user.email}</div>}
