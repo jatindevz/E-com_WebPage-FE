@@ -3,7 +3,6 @@ import { AuthUIProvider } from "@/context/AuthUIContext";
 import { useAuthUI } from "@/context/AuthUIContext";
 import LoginPopup from "@/components/section/Login";
 import Toggel from "@/components/section/toggle";
-import {LoadingSpinner} from "@/components/section/Loadinng";
 
 
 export default function RootLayout({ children }) {
