@@ -84,21 +84,31 @@ export default function WishlistPage() {
     setWishlistProducts((prev) => prev.filter((item) => item.id !== productId));
   };
 
-  const handleAddToCart = (product) => {
-    setCart((prev) => {
-      const exists = prev.find((p) => p.id === product.id);
+  // Cart still local
+  const handleAddToCart = async (product) => {
+    if (!user) {
+      openLogin(); // global popup trigger
+      return;
+    }
 
-      if (exists) {
-        console.log("Increased quantity:", product.name);
-        return prev.map((p) =>
-          p.id === product.id ? { ...p, quantity: (p.quantity || 1) + 1 } : p
-        );
-      }
+    const { error } = await supabase
+      .from("cart")
+      .upsert(
+        {
+          user_id: user.id,
+          product_id: product.id,
+          quantity: 1
+        },
+        { onConflict: "user_id,product_id" }
+      )
+      .select();
 
-      console.log("Added to cart:", product.name);
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    if (error) {
+      console.error("Error adding to cart:", error);
+      return;
+    }
 
+    console.log("Cart updated:", product.name);
     // Optional: also remove from wishlist after adding to cart
     handleRemove(product.id);
   };

@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function LoginPopup({ isOpen=true, onClose, onLoginSuccess }) {
+export default function LoginPopup({ isOpen, onClose, onLoginSuccess }) {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -85,8 +85,8 @@ export default function LoginPopup({ isOpen=true, onClose, onLoginSuccess }) {
                                 key={i}
                                 className="absolute w-2 h-2 bg-coral-red/20 rounded-full"
                                 initial={{
-                                    x: Math.random() * window.innerWidth,
-                                    y: Math.random() * window.innerHeight,
+                                    x: 1 * 100 + 'vw',
+                                    y: 1 * 100 + 'vh',
                                 }}
                                 animate={{
                                     y: [0, -30, 0],
@@ -195,8 +195,8 @@ export default function LoginPopup({ isOpen=true, onClose, onLoginSuccess }) {
                                                 animate={{ opacity: 1, height: "auto" }}
                                                 exit={{ opacity: 0, height: 0 }}
                                                 className={`p-4 rounded-2xl mb-6 text-sm ${message.includes("error") || message.includes("Please enter")
-                                                        ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 border border-red-200 dark:border-red-800"
-                                                        : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border border-green-200 dark:border-green-800"
+                                                    ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 border border-red-200 dark:border-red-800"
+                                                    : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border border-green-200 dark:border-green-800"
                                                     }`}
                                             >
                                                 {message}

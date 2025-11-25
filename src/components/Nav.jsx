@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { House, SquareUserRound, Store, Contact, ShoppingCart, Heart } from "lucide-react";
+import { useUser } from "@/hooks/useUser";
 
 const Nav = () => {
+  const  user  = useUser();
   return (
     <div className="dark:bg-gray-900">
       <div className="fixed top-0 left-0 right-0 flex-center py-4 transition-colors duration-300 z-50">
@@ -12,9 +14,13 @@ const Nav = () => {
           <NavItem href="/about" icon={<SquareUserRound className="w-5 h-5" />} label="About" />
           <NavItem href="/store" icon={<Store className="w-5 h-5" />} label="Store" />
           <NavItem href="/contact" icon={<Contact className="w-5 h-5" />} label="Contact" />
-          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600" />
-          <NavItem href="/wishlist" icon={<Heart className="w-5 h-5" />} label="Wishlist" />
-          <NavItem href="/cart" icon={<ShoppingCart className="w-5 h-5" />} label="Cart" />
+          {user && (
+            <>
+              <div className="w-px h-6 bg-gray-300 dark:bg-gray-600" />
+              <NavItem href="/wishlist" icon={<Heart className="w-5 h-5" />} label="Wishlist" />
+              <NavItem href="/cart" icon={<ShoppingCart className="w-5 h-5" />} label="Cart" />
+            </>
+          )}
         </nav>
       </div>
     </div>

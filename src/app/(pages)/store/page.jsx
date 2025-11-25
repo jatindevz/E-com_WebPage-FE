@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Button from "@/components/section/Button";
 import { useUser } from "@/hooks/useUser";
 import { supabase } from "@/lib/supabaseClient";
+import { useAuthUI } from "@/context/AuthUIContext";
 
 function ProductCard({
     name,
@@ -84,6 +85,8 @@ export default function Store() {
     const [wishlistIds, setWishlistIds] = useState([]); // only product IDs from Supabase
 
     const user = useUser();
+    const { openLogin } = useAuthUI();
+
 
     // Load cart from localStorage (cart still local for now)
     useEffect(() => {
@@ -175,7 +178,7 @@ export default function Store() {
     // --- Wishlist now in Supabase ---
     const handleAddToWishlist = async (product) => {
         if (!user) {
-            alert("Please log in to add items to your wishlist.");
+            openLogin(); // global popup trigger
             return;
         }
 
@@ -201,7 +204,7 @@ export default function Store() {
     // Cart still local
     const handleAddToCart = async (product) => {
         if (!user) {
-            alert("Please log in to add items to cart.");
+            openLogin(); // global popup trigger
             return;
         }
 
@@ -225,11 +228,14 @@ export default function Store() {
         console.log("Cart updated:", product.name);
     };
 
+    const [open , setOpen] = useState(true);
+
 
     return (
         <section className="max-container mt-14 py-20 px-4 transition-colors duration-300">
             
             {/* Header */}
+            {/* <LoginPopup isOpen={open} onClose={() => {setOpen(!open)}} /> */}
             
             
             <div className="text-center mb-12 ">
