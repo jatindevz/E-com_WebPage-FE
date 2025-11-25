@@ -88,6 +88,7 @@ export default function CartPage() {
         const { error } = await supabase.from("cart").delete().eq("user_id", user.id);
         if (error) console.error(error);
         else window.location.href = "/";
+        
     };
 
     if (!user) {

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/index"
 import Chatbot from "@/components/Ai/chatbot"
+import { Toaster, toast } from 'sonner';
 
 
 
@@ -28,10 +29,14 @@ export default function RootLayout({
   // console.log(user);
   return (
     <html lang="en">
+      <head>
+        <script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900`}
       >
         <Nav />
+        <Toaster />
         <Chatbot />
         {children}
       </body>

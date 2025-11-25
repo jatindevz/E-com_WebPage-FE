@@ -4,6 +4,8 @@ import { User } from 'lucide-react';
 import { useUser } from "@/hooks/useUser";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthUI } from "@/context/AuthUIContext";
+import {  toast } from 'sonner';
+
 
 const Toggel = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -184,6 +186,8 @@ const Toggel = () => {
               <button className="w-full text-left p-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
                 Help & Support
               </button>
+              <button onClick={() => toast('My first toast')}>Give me a toast</button>
+
             </div>
           )}
         </div>
