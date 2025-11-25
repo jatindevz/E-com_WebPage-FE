@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useUser } from "@/hooks/useUser";
+import { toast } from "sonner";
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
@@ -143,7 +144,8 @@ export default function CartPage() {
                     const verifyData = await verifyRes.json();
 
                     if (verifyRes.ok && verifyData.status === "success") {
-                        alert("Payment successful & order placed!");
+                        // alert("Payment successful & order placed!");
+                        toast.success(`Payment successful & order placed! Order ID: ${data.id} Rs.${data.amount}`);
                         // optional: front-end cart empty karo
                         setCart([]);
                     } else {

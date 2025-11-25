@@ -20,7 +20,13 @@ export default function LoginPopup({ isOpen, onClose, onLoginSuccess }) {
         setMessage("");
 
         try {
-            const { error } = await supabase.auth.signInWithOtp({ email });
+            const { error } = await supabase.auth.signInWithOtp({
+                email,
+                options: {
+                    emailRedirectTo: "https://e-com-web-page-fe.vercel.app"
+                }
+            });
+
 
             if (error) {
                 setMessage(error.message);

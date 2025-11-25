@@ -4,6 +4,7 @@ import Button from "@/components/section/Button";
 import { useUser } from "@/hooks/useUser";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthUI } from "@/context/AuthUIContext";
+import { toast } from "sonner";
 
 function ProductCard({
     name,
@@ -199,6 +200,8 @@ export default function Store() {
 
         console.log("Added to wishlist:", product.name);
         setWishlistIds((prev) => [...prev, product.id]);
+
+        toast.success(`${product.name} added to your wishlist!`);
     };
 
     // Cart still local
@@ -226,16 +229,15 @@ export default function Store() {
         }
 
         console.log("Cart updated:", product.name);
+
+        toast.success(`${product.name} added to your Cart!`);
     };
 
-    const [open , setOpen] = useState(true);
 
 
     return (
         <section className="max-container mt-14 py-20 px-4 transition-colors duration-300">
-            
-            {/* Header */}
-            {/* <LoginPopup isOpen={open} onClose={() => {setOpen(!open)}} /> */}
+
             
             
             <div className="text-center mb-12 ">

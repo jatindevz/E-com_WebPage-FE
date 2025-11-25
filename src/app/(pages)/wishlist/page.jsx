@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useUser } from "@/hooks/useUser";
+import { toast } from "sonner";
 
 export default function WishlistPage() {
   const [wishlistProducts, setWishlistProducts] = useState([]);
@@ -110,6 +111,7 @@ export default function WishlistPage() {
 
     console.log("Cart updated:", product.name);
     // Optional: also remove from wishlist after adding to cart
+    toast.success(`${product.name} added to your Cart!`);
     handleRemove(product.id);
   };
 
