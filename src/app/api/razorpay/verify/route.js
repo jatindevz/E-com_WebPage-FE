@@ -10,9 +10,14 @@ export async function POST(req) {
         .update(razorpay_order_id + "|" + razorpay_payment_id)
         .digest("hex");
 
-    if (sign === razorpay_signature) {
-        return NextResponse.json({ status: "success" });
-    } else {
-        return NextResponse.json({ status: "failed" }, { status: 400 });
-    }
+    if (sign !== razorpay_signature) {
+        return NextResponse.json(
+            { status: "failed", reason: "invalid_signature" },
+            { status: 400 }
+        );
+    } 
+
+    
+
+    return NextResponse.json({ status: "success" });
 }

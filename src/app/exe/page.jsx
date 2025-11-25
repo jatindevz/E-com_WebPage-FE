@@ -10,7 +10,7 @@ export default function Checkout() {
 
         const res = await fetch("/api/razorpay/order", {
             method: "POST",
-            body: JSON.stringify({ amount: 500 }), // ₹500
+            body: JSON.stringify({ amount: 1 }), // ₹500
         });
 
         const order = await res.json();
@@ -38,8 +38,13 @@ export default function Checkout() {
     };
 
     return (
-        <button disabled={loading} onClick={handlePay} className="fixed  bg-black text-white p-4 rounded cursor-pointer">
+        <button
+            disabled={loading}
+            onClick={handlePay}
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black text-white p-4 rounded cursor-pointer"
+        >
             {loading ? "Processing..." : "Pay ₹500"}
         </button>
+
     );
 }

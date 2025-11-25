@@ -5,7 +5,7 @@ import { useUser } from "@/hooks/useUser";
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false); // 🔥 hook upar
 
     const user = useUser();
 
@@ -79,22 +79,107 @@ export default function CartPage() {
         setCart((prev) => prev.filter((c) => c.id !== cartId));
     };
 
-    const total = cart.reduce(
+    const subtotal = cart.reduce(
         (sum, item) => sum + item.product.price * item.quantity,
         0
     );
 
+    const shipping = subtotal > 50 ? 0 : 5.99;
+    const total = subtotal + shipping;
+
     const handleCheckout = async () => {
-        const { error } = await supabase.from("cart").delete().eq("user_id", user.id);
-        if (error) console.error(error);
-        else window.location.href = "/";
-        
+        if (!user) return;
+        if (cart.length === 0) return;
+
+        setLoading(true);
+
+        try {
+            // 🔥 1) Create order on backend with actual total
+            const res = await fetch("/api/razorpay/order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ amount: 1 }), // amount in rupees, server 100x karega
+            });
+
+            const order = await res.json();
+
+            // 🔥 2) Razorpay options
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name: "Your Project",
+                order_id: order.id,
+                handler: async function (response) {
+                    const verifyRes = await fetch("/api/razorpay/verify", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            ...response,           // razorpay_order_id, razorpay_payment_id, razorpay_signature 
+                        }),
+                    });
+                        const { data, error } = await supabase
+                        .from("orders")
+                        .insert({
+                            user_id: user.id,
+                            order_id: response.razorpay_order_id,
+                            payment_id: response.razorpay_payment_id,
+                            items: cart, // JSONB column recommended
+                            amount: total,
+                            status: "paid",
+                        }).select().single();
+                    
+                    if (error) {
+                        console.error("Order save error:", error);
+                        // return;
+                    }
+                    
+                    
+                    
+                    const verifyData = await verifyRes.json();
+
+                    if (verifyRes.ok && verifyData.status === "success") {
+                        alert("Payment successful & order placed!");
+                        // optional: front-end cart empty karo
+                        setCart([]);
+                    } else {
+                        alert("Payment verified nahi hua / order save failed");
+                    }
+                },
+                theme: { color: "#3359cc" },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (err) {
+            console.error("Checkout error:", err);
+            alert("Something went wrong in checkout");
+        } finally {
+            setLoading(false);
+
+            // 3) clear cart for this user
+            const { error: cartError } = await supabase
+                .from("cart")
+                .delete()
+                .eq("user_id", user.id);
+
+            if (cartError) {
+                console.error("Cart delete error:", cartError);
+            }
+
+        }
     };
 
     if (!user) {
         return (
             <section className="max-w-7xl mx-auto px-6 py-12">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Your Cart 🛒</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                    Your Cart 🛒
+                </h1>
                 <div className="text-center py-12">
                     <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
                         Please sign in to view your cart.
@@ -109,7 +194,9 @@ export default function CartPage() {
 
     return (
         <section className="max-w-7xl mx-auto px-6 py-12">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Your Cart 🛒</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+                Your Cart 🛒
+            </h1>
 
             {loading ? (
                 <div className="flex justify-center items-center py-12">
@@ -122,7 +209,7 @@ export default function CartPage() {
                         Your cart is empty.
                     </p>
                     <button
-                        onClick={() => window.location.href = '/store'}
+                        onClick={() => (window.location.href = "/store")}
                         className="bg-coral-red text-white px-6 py-3 rounded-lg hover:bg-coral-red/90 transition-colors"
                     >
                         Continue Shopping
@@ -189,29 +276,35 @@ export default function CartPage() {
                     {/* Summary Section */}
                     <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Subtotal:</h2>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                                Subtotal:
+                            </h2>
                             <p className="text-2xl font-bold text-coral-red">
-                                ${total.toFixed(2)}
+                                ${subtotal.toFixed(2)}
                             </p>
                         </div>
 
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Shipping:</h2>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                                Shipping:
+                            </h2>
                             <p className="text-lg text-gray-600 dark:text-gray-400">
-                                {total > 50 ? "Free" : "$5.99"}
+                                {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
                             </p>
                         </div>
 
                         <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Total:</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    Total:
+                                </h2>
                                 <p className="text-3xl font-bold text-coral-red">
-                                    ${(total + (total > 50 ? 0 : 5.99)).toFixed(2)}
+                                    ${total.toFixed(2)}
                                 </p>
                             </div>
-                            {total < 50 && (
+                            {subtotal < 50 && (
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                                    Add ${(50 - total).toFixed(2)} more for free shipping!
+                                    Add ${(50 - subtotal).toFixed(2)} more for free shipping!
                                 </p>
                             )}
                         </div>
@@ -227,7 +320,7 @@ export default function CartPage() {
                     {/* Continue Shopping */}
                     <div className="text-center mt-6">
                         <button
-                            onClick={() => window.location.href = '/store'}
+                            onClick={() => (window.location.href = "/store")}
                             className="text-coral-red hover:text-coral-red/80 transition-colors font-medium"
                         >
                             ← Continue Shopping
