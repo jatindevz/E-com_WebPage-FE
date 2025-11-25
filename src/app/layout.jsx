@@ -36,7 +36,24 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900`}
       >
         <Nav />
-        <Toaster />
+        <Toaster
+          position="top-center"
+          theme="dark"
+          expand={true}
+          toastOptions={{
+            style: {
+              background: "#1a1a1a",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "white",
+              borderRadius: "14px",
+              padding: "14px 18px",
+              fontSize: "15px",
+              display: "flex",
+              alignItems: "center",
+            },
+            className: "shadow-lg backdrop-blur-md",
+          }}
+        />
         <Chatbot />
         {children}
       </body>
