@@ -134,21 +134,21 @@ export default function Contact() {
             address: "123 Sport Street, New York, NY 10001",
             hours: "Mon-Sat: 9AM-9PM, Sun: 10AM-7PM",
             phone: "+1 (555) 123-4567",
-            image: "https://loremflickr.com/400/200/store,interior?lock=10"
+            image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80"
         },
         {
             name: "Downtown Location",
             address: "456 Athletic Ave, New York, NY 10002",
             hours: "Mon-Sat: 10AM-8PM, Sun: 11AM-6PM",
             phone: "+1 (555) 123-4568",
-            image: "https://loremflickr.com/400/200/store,interior?lock=11"
+            image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800&auto=format&fit=crop&q=80"
         },
         {
             name: "Brooklyn Store",
             address: "789 Runner's Road, Brooklyn, NY 11201",
             hours: "Mon-Sat: 9AM-8PM, Sun: 10AM-6PM",
             phone: "+1 (555) 123-4569",
-            image: "https://loremflickr.com/400/200/store,interior?lock=12"
+            image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800&auto=format&fit=crop&q=80"
         }
     ];
 

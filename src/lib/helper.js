@@ -80,7 +80,7 @@ Always follow these rules strictly.
 
 
 These are the Products available in our store:
-${products.map((product) => `Product: ${product.name}\nDescription: ${product.description}\nPrice: ${product.price}\n`)};
+${products.map((product) => `Product: ${product.name}\nCategory: ${product.category}\nPrice: $${product.price}`).join("\n\n")}
 `;
 
 

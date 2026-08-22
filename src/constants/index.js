@@ -60,7 +60,7 @@ export const services = [
         subtext: "Enjoy seamless shopping with our complimentary shipping service."
     },
     {
-        imgURL: '/assets/icons/shield-check.svg',
+        imgURL: '/assets/icons/shield-tick.svg',
         label: "Secure Payment",
         subtext: "Experience worry-free transactions with our secure payment options."
     },

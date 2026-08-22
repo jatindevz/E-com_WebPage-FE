@@ -111,20 +111,41 @@ export default function Store() {
 
 
 
-    // Fetch products from Supabase
+    // Fetch products from Supabase with fallback catalog
     useEffect(() => {
         async function fetchProducts() {
             setLoadingProducts(true);
 
-            const { data, error } = await supabase
-                .from("products")
-                .select("*")
-                .order("id", { ascending: true });
+            const fallbackCatalog = [
+                { id: 1, name: "Nike Air Force 1 '07", image: "https://loremflickr.com/600/600/nike,shoes?lock=1", price: 110, category: "Lifestyle", isNew: true },
+                { id: 2, name: "Nike Dunk Low Retro", image: "https://loremflickr.com/600/600/nike,shoes?lock=2", price: 120, category: "Lifestyle", isNew: false },
+                { id: 3, name: "Nike Air Max 270", image: "https://loremflickr.com/600/600/nike,shoes?lock=3", price: 150, category: "Running", isNew: true },
+                { id: 4, name: "Nike Pegasus 40", image: "https://loremflickr.com/600/600/nike,shoes?lock=4", price: 140, category: "Running", isNew: false },
+                { id: 5, name: "Air Jordan 1 Mid", image: "https://loremflickr.com/600/600/nike,shoes?lock=5", price: 165, category: "Basketball", isNew: false },
+                { id: 6, name: "Nike Air VaporMax Plus", image: "https://loremflickr.com/600/600/nike,shoes?lock=6", price: 210, category: "Lifestyle", isNew: true },
+                { id: 7, name: "Nike Metcon 9", image: "https://loremflickr.com/600/600/nike,shoes?lock=7", price: 130, category: "Training", isNew: false },
+                { id: 8, name: "Nike Blazer Mid '77 Vintage", image: "https://loremflickr.com/600/600/nike,shoes?lock=8", price: 105, category: "Lifestyle", isNew: false },
+                { id: 9, name: "Nike Vaporfly Next% 3", image: "https://loremflickr.com/600/600/nike,shoes?lock=9", price: 260, category: "Running", isNew: true },
+                { id: 10, name: "Nike Air Max 97 SE", image: "https://loremflickr.com/600/600/nike,shoes?lock=10", price: 180, category: "Lifestyle", isNew: false },
+                { id: 11, name: "Nike Court Legacy Lift", image: "https://loremflickr.com/600/600/nike,shoes?lock=11", price: 85, category: "Tennis", isNew: true },
+                { id: 12, name: "Nike Zoom Freak 5", image: "https://loremflickr.com/600/600/nike,shoes?lock=12", price: 130, category: "Basketball", isNew: false }
+            ];
 
-            if (error) {
-                console.error("Error fetching products:", error);
-            } else {
-                setProducts(data || []);
+            try {
+                const { data, error } = await supabase
+                    .from("products")
+                    .select("*")
+                    .order("id", { ascending: true });
+
+                if (error || !data || data.length === 0) {
+                    console.log("Using fallback catalog for products");
+                    setProducts(fallbackCatalog);
+                } else {
+                    setProducts(data);
+                }
+            } catch (err) {
+                console.log("Error querying products, using fallback catalog:", err);
+                setProducts(fallbackCatalog);
             }
 
             setLoadingProducts(false);

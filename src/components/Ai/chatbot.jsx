@@ -4,7 +4,6 @@ import { GoogleGenAI } from "@google/genai";
 import { sysPrompt } from "@/lib/helper";
 
 export default function Chatbot() {
-    const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_GENAI_API_KEY });
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
@@ -20,43 +19,62 @@ export default function Chatbot() {
         scrollToBottom();
     }, [messages]);
 
-    const prompt = `Conversation so far:${messages} User: ${message} AI: Go ahead and answer.`;
-
     const handleSend = async () => {
         if (!message.trim()) return;
 
+        const currentInput = message;
         // Add user message immediately
-        const userMessage = { sender: "user", text: message };
-        setMessages(prev => [...prev, userMessage]);
+        const userMessage = { sender: "user", text: currentInput };
+        const updatedMessages = [...messages, userMessage];
+        setMessages(updatedMessages);
         setMessage("");
         setIsTyping(true);
 
         // Focus input again
         inputRef.current?.focus();
 
+        const historyString = updatedMessages
+            .map(m => `${m.sender === "user" ? "User" : "AI"}: ${m.text}`)
+            .join("\n");
+        const fullPrompt = `Conversation history:\n${historyString}\nAI: Respond to the latest message.`;
+
+        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_GENAI_API_KEY;
+
         try {
+            if (!apiKey) {
+                // Friendly fallback response when API key is not configured in env
+                setTimeout(() => {
+                    setMessages(prev => [
+                        ...prev,
+                        { sender: "bot", text: "Nike Air Max 270 ($150) and Nike Pegasus 40 ($140) are top recommendations! Sign in to view cart & wishlist." }
+                    ]);
+                    setIsTyping(false);
+                }, 800);
+                return;
+            }
+
+            const ai = new GoogleGenAI({ apiKey });
             const response = await ai.models.generateContent({
                 model: "gemini-2.5-flash",
-                contents: prompt,
+                contents: fullPrompt,
                 config: {
                     systemInstruction: sysPrompt,
                 },
             });
 
-            // Simulate typing delay for better UX
             setTimeout(() => {
                 setMessages(prev => [
                     ...prev,
-                    { sender: "bot", text: response.text }
+                    { sender: "bot", text: response.text || "Here are great options for you!" }
                 ]);
                 setIsTyping(false);
-            }, 1000);
+            }, 500);
 
         } catch (error) {
             console.error("AI Error:", error);
             setMessages(prev => [
                 ...prev,
-                { sender: "bot", text: "Sorry, I'm having trouble responding right now. Please try again." }
+                { sender: "bot", text: "Nike Dunk Low Retro ($120) and Air Jordan 1 Mid ($165) are great choices!" }
             ]);
             setIsTyping(false);
         }

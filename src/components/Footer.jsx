@@ -55,7 +55,7 @@ const Footer = () => {
       <div className='flex justify-between text-white-400 mt-24 max-sm:flex-col max-sm:items-center'>
         <div className='flex flex-1 justify-start items-center gap-2 font-montserrat cursor-pointer'>
           <img
-            src={'/assets/icons/copyright.svg'}
+            src={'/assets/icons/copyright-sign.svg'}
             alt='copyright sign'
             width={20}
             height={20}

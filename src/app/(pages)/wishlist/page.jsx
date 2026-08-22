@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useUser } from "@/hooks/useUser";
+import { useAuthUI } from "@/context/AuthUIContext";
 import { toast } from "sonner";
 
 export default function WishlistPage() {
@@ -10,6 +11,7 @@ export default function WishlistPage() {
 
   const [cart, setCart] = useState([]);
   const user = useUser();
+  const { openLogin } = useAuthUI();
 
   // Load cart from localStorage (still local)
   useEffect(() => {

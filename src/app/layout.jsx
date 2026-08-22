@@ -8,6 +8,8 @@ import { Toaster, toast } from 'sonner';
 
 
 
+import Script from "next/script";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,11 +28,10 @@ export const metadata = {
 export default function RootLayout({
   children,
 }) {
-  // console.log(user);
   return (
     <html lang="en">
       <head>
-        <script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900`}

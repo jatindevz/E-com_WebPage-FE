@@ -78,25 +78,25 @@ export default function About() {
         {
             name: "Sarah Johnson",
             role: "CEO & Founder",
-            image: "https://loremflickr.com/200/200/portrait?lock=1",
+            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80",
             bio: "With over 15 years in the footwear industry, Sarah founded NikeStore with a vision to bring premium athletic wear to everyone. Her leadership has driven our company's growth and commitment to excellence."
         },
         {
             name: "Michael Chen",
             role: "Head of Design",
-            image: "https://loremflickr.com/200/200/portrait?lock=2",
+            image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
             bio: "Michael brings innovative design concepts to life, combining functionality with style. His expertise in ergonomics and materials science ensures our products meet the highest standards of comfort and performance."
         },
         {
             name: "Emily Rodriguez",
             role: "Customer Experience Director",
-            image: "https://loremflickr.com/200/200/portrait?lock=3",
+            image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80",
             bio: "Emily is passionate about creating unforgettable customer journeys. Her team ensures every interaction with NikeStore exceeds expectations, from browsing to after-sales support."
         },
         {
             name: "David Kim",
             role: "Operations Manager",
-            image: "https://loremflickr.com/200/200/portrait?lock=4",
+            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
             bio: "David optimizes our supply chain and logistics to ensure timely delivery and inventory management. His efficient systems keep our operations running smoothly across all locations."
         }
     ];
@@ -144,7 +144,7 @@ export default function About() {
             <div className="flex flex-col lg:flex-row gap-12 items-center mb-20">
                 <div className="flex-1">
                     <img
-                        src="https://loremflickr.com/600/400/store,interior?lock=5"
+                        src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80"
                         alt="Our first store"
                         className="rounded-2xl shadow-lg w-full h-auto"
                     />
